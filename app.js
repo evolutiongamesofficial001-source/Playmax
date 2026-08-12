@@ -455,23 +455,45 @@ function onYouTubeIframeAPIReady(){
       playsinline: 1
     },
     events: {
+      onReady: onPlayerReady,
       onStateChange: onPlayerStateChange
     }
   });
 }
 window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
 
+function onPlayerReady(){
+  mostrarCarregando(false);
+}
+
 function onPlayerStateChange(event){
+  // -1 unstarted, 0 ended, 1 playing, 2 paused, 3 buffering, 5 cued
+  if(event.data === YT.PlayerState.PLAYING){
+    mostrarCarregando(false);
+  }
+  if(event.data === YT.PlayerState.BUFFERING){
+    mostrarCarregando(true);
+  }
   // Quando o vídeo termina (0), avança progresso de série
   if(event.data === YT.PlayerState.ENDED && currentPlayback?.tipo === 'serie'){
     avancarEpisodio();
   }
 }
 
+function mostrarCarregando(mostrar){
+  const loading = document.getElementById('playerLoading');
+  if(loading) loading.classList.toggle('show', !!mostrar);
+}
+
 function abrirPlayer({ tipo, item, temporada, episodio, ep }){
   const overlay = document.getElementById('playerOverlay');
   const titleEl = document.getElementById('playerTitle');
   document.getElementById('detailModal').classList.remove('open');
+
+  // No celular, entra automaticamente em tela cheia deitada já aqui, dentro do
+  // mesmo gesto de clique do usuário (exigido pelas APIs de Fullscreen/Orientation).
+  // No desktop mantemos o comportamento manual (botão de tela cheia).
+  if(isMobileDevice()) entrarModoCine();
 
   let youtubeId, titulo;
   if(tipo === 'filme'){
@@ -488,6 +510,9 @@ function abrirPlayer({ tipo, item, temporada, episodio, ep }){
   currentPlayback = { tipo, item, temporada, episodio, youtubeId };
   titleEl.textContent = titulo;
   overlay.classList.add('open');
+  document.body.classList.add('player-open');
+  mostrarCarregando(true);
+  mostrarControles();
 
   const tentarCarregar = () => {
     if(ytReady && ytPlayer && ytPlayer.loadVideoById){
@@ -521,38 +546,144 @@ function avancarEpisodio(){
 
 function fecharPlayer(){
   document.getElementById('playerOverlay').classList.remove('open');
+  document.body.classList.remove('player-open');
   if(ytPlayer && ytPlayer.stopVideo) ytPlayer.stopVideo();
-  sairTelaCheia();
+  sairModoCine();
   currentPlayback = null;
 }
 document.getElementById('playerBack').onclick = fecharPlayer;
 
 /* ---------------- Tela cheia + rotação (mobile) ---------------- */
+const playerOverlay = document.getElementById('playerOverlay');
 const frameWrap = document.getElementById('playerFrameWrap');
+const rotateHint = document.getElementById('playerRotateHint');
+let telaCheiaAtiva = false; // controlada por nós (true assim que o player abre no celular)
+
+function isMobileDevice(){
+  const uaMovel = /Android|iPhone|iPad|iPod|Mobile|webOS/i.test(navigator.userAgent);
+  const telaEstreita = Math.min(window.innerWidth, window.innerHeight) <= 900;
+  const semMouse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  return uaMovel || (semMouse && telaEstreita);
+}
+
+function pedirElementoFullscreen(el){
+  const metodo = el.requestFullscreen || el.webkitRequestFullscreen || el.webkitEnterFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+  if(metodo) return metodo.call(el);
+  return Promise.reject(new Error('Fullscreen API indisponível'));
+}
+
+function sairFullscreenNativo(){
+  const sair = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+  if(sair && (document.fullscreenElement || document.webkitFullscreenElement)) return sair.call(document);
+  return Promise.resolve();
+}
+
+// Chamada assim que o player abre (dentro do gesto de clique do usuário) para tentar
+// deixar a experiência em tela cheia e deitada automaticamente, sem depender do
+// usuário tocar num botão extra. Cobre Android (Fullscreen API + Orientation Lock)
+// e cai num fallback via CSS quando o navegador não suporta essas APIs (ex: iOS Safari).
+async function entrarModoCine(){
+  telaCheiaAtiva = true;
+  atualizarIconeFullscreen();
+
+  try{
+    await pedirElementoFullscreen(playerOverlay);
+  }catch(e){ /* navegador não suporta (ex: iOS Safari) — segue com o fallback CSS abaixo */ }
+
+  if(isMobileDevice() && screen.orientation && screen.orientation.lock){
+    try{ await screen.orientation.lock('landscape'); }
+    catch(e){ /* navegador recusou (ex: fora de PWA) — o fallback CSS cobre isso */ }
+  }
+
+  aplicarRotacaoForcada();
+}
+
+async function sairModoCine(){
+  telaCheiaAtiva = false;
+  atualizarIconeFullscreen();
+  await sairFullscreenNativo().catch(()=>{});
+  if(screen.orientation && screen.orientation.unlock){
+    try{ screen.orientation.unlock(); }catch(e){}
+  }
+  playerOverlay.classList.remove('forced-landscape');
+  rotateHint.classList.remove('show');
+}
+
+// Fallback: quando o celular ficou em pé e não temos Fullscreen/Orientation nativos
+// funcionando (ex: iOS Safari), giramos o próprio player via CSS para simular a
+// tela cheia deitada.
+function aplicarRotacaoForcada(){
+  if(!isMobileDevice() || !playerOverlay.classList.contains('open')){
+    playerOverlay.classList.remove('forced-landscape');
+    rotateHint.classList.remove('show');
+    return;
+  }
+  const emPe = window.innerHeight > window.innerWidth;
+  const conseguiuNativo = !!(document.fullscreenElement || document.webkitFullscreenElement) &&
+                           !!(screen.orientation && /landscape/i.test(screen.orientation.type || ''));
+
+  if(emPe && !conseguiuNativo){
+    playerOverlay.classList.add('forced-landscape');
+    if(!rotateHint.classList.contains('show')){
+      rotateHint.classList.add('show');
+      clearTimeout(rotateHint._timer);
+      rotateHint._timer = setTimeout(() => rotateHint.classList.remove('show'), 4000);
+    }
+  }else{
+    playerOverlay.classList.remove('forced-landscape');
+    rotateHint.classList.remove('show');
+  }
+}
+
+function atualizarIconeFullscreen(){
+  const btn = document.getElementById('playerFullscreen');
+  if(!btn) return;
+  btn.innerHTML = telaCheiaAtiva
+    ? `<svg viewBox="0 0 24 24" width="20" height="20"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+    : `<svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
 
 async function alternarTelaCheia(){
-  if(!document.fullscreenElement){
-    try{
-      await frameWrap.requestFullscreen();
-      // Tenta deitar a tela automaticamente em celulares
-      if(screen.orientation && screen.orientation.lock){
-        try{ await screen.orientation.lock('landscape'); }catch(e){ /* alguns navegadores negam fora de PWA */ }
-      }
-    }catch(e){ console.warn('Não foi possível entrar em tela cheia:', e); }
+  if(!telaCheiaAtiva){
+    await entrarModoCine();
   }else{
-    await document.exitFullscreen();
+    await sairModoCine();
   }
 }
 document.getElementById('playerFullscreen').onclick = alternarTelaCheia;
 
-function sairTelaCheia(){
-  if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
-  if(screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
-}
+window.addEventListener('resize', () => aplicarRotacaoForcada());
+window.addEventListener('orientationchange', () => setTimeout(aplicarRotacaoForcada, 150));
 
 document.addEventListener('fullscreenchange', () => {
-  if(!document.fullscreenElement && screen.orientation && screen.orientation.unlock){
-    screen.orientation.unlock();
+  const emFullscreenNativo = !!document.fullscreenElement;
+  aplicarRotacaoForcada();
+  // No celular, se o usuário saiu da tela cheia nativa por fora (ex: botão de
+  // voltar do sistema/navegador no Android), encerramos o player por completo —
+  // no desktop apenas voltamos ao modo janela sem fechar o player.
+  if(!emFullscreenNativo && telaCheiaAtiva && isMobileDevice() && playerOverlay.classList.contains('open')){
+    fecharPlayer();
+  }else if(!emFullscreenNativo){
+    telaCheiaAtiva = false;
+    atualizarIconeFullscreen();
+  }
+});
+
+/* ---------------- Auto-ocultar controles do player ---------------- */
+let ocultarControlesTimer = null;
+function mostrarControles(){
+  playerOverlay.classList.remove('controls-hidden');
+  clearTimeout(ocultarControlesTimer);
+  ocultarControlesTimer = setTimeout(() => {
+    playerOverlay.classList.add('controls-hidden');
+  }, 3200);
+}
+frameWrap.addEventListener('click', mostrarControles);
+frameWrap.addEventListener('touchstart', mostrarControles, { passive: true });
+
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape' && playerOverlay.classList.contains('open')){
+    fecharPlayer();
   }
 });
 

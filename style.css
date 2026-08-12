@@ -39,6 +39,8 @@ body{
   overflow-x:hidden;
 }
 
+body.player-open{ overflow: hidden; position: fixed; inset: 0; width:100%; height:100%; }
+
 img{ display:block; max-width:100%; }
 button{ font-family:inherit; cursor:pointer; border:none; }
 a{ text-decoration:none; color:inherit; }
@@ -685,16 +687,39 @@ a{ text-decoration:none; color:inherit; }
   z-index: 1000;
   display:none;
   flex-direction:column;
+  touch-action: manipulation;
 }
 .player-overlay.open{ display:flex; }
+
+/* Modo cinema forçado (fallback p/ navegadores sem Fullscreen/Orientation API, ex: iOS Safari) */
+.player-overlay.forced-landscape{
+  position: fixed;
+  top: 0;
+  left: 100%;
+  width: 100vh;
+  height: 100vw;
+  transform-origin: 0 0;
+  transform: rotate(90deg);
+}
+
 .player-topbar{
   display:flex;
   align-items:center;
   justify-content:space-between;
   padding: 14px 18px;
+  padding-top: calc(14px + env(safe-area-inset-top, 0px));
   background: linear-gradient(180deg, rgba(0,0,0,0.85), transparent);
   position:absolute; top:0; left:0; right:0;
   z-index: 5;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity .35s var(--ease), transform .35s var(--ease);
+  pointer-events: auto;
+}
+.player-overlay.controls-hidden .player-topbar{
+  opacity: 0;
+  transform: translateY(-100%);
+  pointer-events: none;
 }
 .player-back, .player-fullscreen{
   display:flex; align-items:center; gap:6px;
@@ -704,7 +729,9 @@ a{ text-decoration:none; color:inherit; }
   border-radius: 8px;
   font-weight:700;
   font-size: 0.85rem;
+  transition: background .2s;
 }
+.player-back:active, .player-fullscreen:active{ background: rgba(255,255,255,0.2); }
 .player-fullscreen{ padding: 8px; }
 .player-title{
   font-weight:700;
@@ -720,12 +747,61 @@ a{ text-decoration:none; color:inherit; }
   flex:1;
   position: relative;
   background:#000;
+  overflow: hidden;
 }
 #ytPlayer, .player-frame-wrap iframe{
   position:absolute; inset:0;
   width:100%; height:100%;
   border:0;
 }
+
+/* Spinner de carregamento */
+.player-loading{
+  position:absolute; inset:0;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  background:#000;
+  z-index: 3;
+  color: var(--ink-300);
+  font-size: 0.85rem;
+  font-weight:600;
+  pointer-events:none;
+}
+.player-loading.show{ display:flex; }
+.player-spinner{
+  width:44px; height:44px;
+  border-radius:50%;
+  border: 3px solid rgba(111,195,255,0.18);
+  border-top-color: var(--blue-light);
+  animation: player-spin .8s linear infinite;
+}
+@keyframes player-spin{ to{ transform: rotate(360deg); } }
+
+/* Dica para girar o celular (aparece só em mobile-portrait, sem fullscreen real) */
+.player-rotate-hint{
+  position:absolute;
+  left:50%; bottom: 22px;
+  transform: translateX(-50%);
+  display:none;
+  align-items:center;
+  gap:10px;
+  max-width: 82%;
+  background: rgba(4,6,12,0.85);
+  border: 1px solid rgba(111,195,255,0.25);
+  color: var(--ink-100);
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  line-height:1.3;
+  z-index: 4;
+  animation: player-hint-in .4s var(--ease);
+}
+.player-rotate-hint svg{ flex-shrink:0; color: var(--blue-light); }
+.player-rotate-hint.show{ display:flex; }
+@keyframes player-hint-in{ from{ opacity:0; transform: translateX(-50%) translateY(10px);} to{ opacity:1; transform: translateX(-50%) translateY(0);} }
 
 /* ============ RESPONSIVE ============ */
 @media (max-width: 900px){
