@@ -456,33 +456,58 @@ function onYouTubeIframeAPIReady(){
     },
     events: {
       onReady: onPlayerReady,
-      onStateChange: onPlayerStateChange
+      onStateChange: onPlayerStateChange,
+      onError: onPlayerError
     }
   });
 }
 window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+
+function onPlayerError(){
+  // ID inválido/indisponível — para de girar e avisa em vez de travar pra sempre.
+  mostrarCarregando(false, true);
+}
 
 function onPlayerReady(){
   mostrarCarregando(false);
 }
 
 function onPlayerStateChange(event){
+  const St = YT.PlayerState;
   // -1 unstarted, 0 ended, 1 playing, 2 paused, 3 buffering, 5 cued
-  if(event.data === YT.PlayerState.PLAYING){
+  if(event.data === St.BUFFERING){
+    mostrarCarregando(true);
+  }else if(event.data === St.PLAYING || event.data === St.PAUSED || event.data === St.CUED){
+    // PAUSED/CUED cobre o caso comum no celular em que o autoplay é bloqueado
+    // pelo navegador: o vídeo fica pronto/pausado esperando o toque do usuário
+    // no próprio player do YouTube, mas nosso spinner precisa sumir mesmo assim.
     mostrarCarregando(false);
   }
-  if(event.data === YT.PlayerState.BUFFERING){
-    mostrarCarregando(true);
-  }
   // Quando o vídeo termina (0), avança progresso de série
-  if(event.data === YT.PlayerState.ENDED && currentPlayback?.tipo === 'serie'){
+  if(event.data === St.ENDED && currentPlayback?.tipo === 'serie'){
     avancarEpisodio();
   }
 }
 
-function mostrarCarregando(mostrar){
+let cargaFallbackTimer = null;
+function mostrarCarregando(mostrar, erro){
   const loading = document.getElementById('playerLoading');
-  if(loading) loading.classList.toggle('show', !!mostrar);
+  if(!loading) return;
+  loading.classList.toggle('show', !!mostrar || !!erro);
+  loading.classList.toggle('is-error', !!erro);
+  loading.querySelector('span').textContent = erro
+    ? 'Não foi possível carregar este vídeo.'
+    : 'Carregando...';
+  clearTimeout(cargaFallbackTimer);
+  if(mostrar && !erro){
+    // Rede à parte com timeout de segurança: se por qualquer motivo o player
+    // não avisar que carregou (ex: iframe travado, autoplay bloqueado sem
+    // disparar evento), o spinner some sozinho depois de alguns segundos em
+    // vez de ficar girando pra sempre.
+    cargaFallbackTimer = setTimeout(() => {
+      loading.classList.remove('show');
+    }, 7000);
+  }
 }
 
 function abrirPlayer({ tipo, item, temporada, episodio, ep }){
@@ -511,7 +536,7 @@ function abrirPlayer({ tipo, item, temporada, episodio, ep }){
   titleEl.textContent = titulo;
   overlay.classList.add('open');
   document.body.classList.add('player-open');
-  mostrarCarregando(true);
+  mostrarCarregando(true, false);
   mostrarControles();
 
   const tentarCarregar = () => {

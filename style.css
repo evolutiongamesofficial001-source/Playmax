@@ -779,6 +779,13 @@ a{ text-decoration:none; color:inherit; }
   animation: player-spin .8s linear infinite;
 }
 @keyframes player-spin{ to{ transform: rotate(360deg); } }
+.player-loading.is-error .player-spinner{
+  animation: none;
+  border-color: rgba(255,77,94,0.25);
+  border-top-color: var(--danger);
+  border-style: solid;
+}
+.player-loading.is-error span{ color: var(--ink-100); max-width: 70%; text-align:center; }
 
 /* Dica para girar o celular (aparece só em mobile-portrait, sem fullscreen real) */
 .player-rotate-hint{
