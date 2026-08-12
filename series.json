@@ -1,83 +1,77 @@
 [
   {
     "id": "s001",
-    "titulo": "Blender Open Movies: Coleção",
-    "descricao": "Uma antologia de curtas-metragens experimentais criados pela comunidade Blender, explorando animação, efeitos visuais e narrativas originais em cada episódio.",
-    "classificacao": "12",
-    "capa": "https://peach.blender.org/wp-content/uploads/title_anouncement.jpg?x11217",
-    "tags": ["animação", "antologia", "criatividade"],
+    "titulo": "The Amazing Digital Circus",
+    "descricao": "Uma dark comedy psicológica sobre um grupo de humanos presos dentro de um circo digital controlado por uma IA instável, tentando escapar enquanto lidam com seus próprios traumas.",
+    "classificacao": "16 anos",
+    "capa": "https://img.youtube.com/vi/HwAPLk_sQ3w/maxresdefault.jpg",
+    "tags": ["Animação", "Comédia negra", "Ficção científica", "Web série"],
     "temporadas": [
       {
         "numero": 1,
         "episodios": [
           {
             "numero": 1,
-            "titulo": "O Despertar",
-            "descricao": "Um herói acorda em um mundo desconhecido e precisa entender as regras do lugar antes que seja tarde demais.",
-            "duracao": "9 min",
-            "youtubeId": "aqz-KE-bpKQ"
+            "titulo": "Pilot",
+            "descricao": "Pomni acorda dentro do Digital Circus, conhece Caine e o restante do elenco preso ali, e descobre que a saída pode não passar de uma falsa esperança.",
+            "duracao": "25min",
+            "youtubeId": "HwAPLk_sQ3w"
           },
           {
             "numero": 2,
-            "titulo": "A Travessia",
-            "descricao": "A jornada continua por terras hostis, testando os limites físicos e emocionais dos personagens.",
-            "duracao": "14 min",
-            "youtubeId": "eRsGyueVLvQ"
+            "titulo": "Candy Carrier Chaos!",
+            "descricao": "Uma aventura de entrega em um mundo de doces vira uma crise de identidade quando Gummigoo percebe a estrutura artificial por trás de sua própria existência.",
+            "duracao": "25min",
+            "youtubeId": "4ofJpOEXrZs"
           },
           {
             "numero": 3,
-            "titulo": "O Confronto",
-            "descricao": "As tensões chegam ao limite em um confronto que muda o rumo de toda a história.",
-            "duracao": "11 min",
-            "youtubeId": "R6MlUcmOul8"
-          }
-        ]
-      },
-      {
-        "numero": 2,
-        "episodios": [
-          {
-            "numero": 1,
-            "titulo": "Novos Horizontes",
-            "descricao": "Uma nova temporada começa com personagens inéditos explorando territórios ainda maiores.",
-            "duracao": "12 min",
-            "youtubeId": "Y-rmzh0PI3c"
+            "titulo": "The Mystery Of Mildenhall Manor",
+            "descricao": "Uma mansão mal-assombrada dá a Kinger seu material emocional mais marcante, transformando medo, escuridão e memória no centro do episódio.",
+            "duracao": "25min",
+            "youtubeId": "bKjfw77cxeQ"
           },
           {
-            "numero": 2,
-            "titulo": "Renascer",
-            "descricao": "Entre memórias e o presente, um personagem reflete sobre ciclos de vida e recomeços.",
-            "duracao": "7 min",
-            "youtubeId": "WhWc3b3KhnY"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "s002",
-    "titulo": "Crônicas do Futuro",
-    "descricao": "Em um mundo dominado por tecnologia avançada, um grupo de sobreviventes luta para restaurar a humanidade após uma guerra contra máquinas.",
-    "classificacao": "16",
-    "capa": "https://mango.blender.org/wp-content/uploads/2013/05/01_thom_celia_bridge.jpg",
-    "tags": ["ficção científica", "ação", "drama"],
-    "temporadas": [
-      {
-        "numero": 1,
-        "episodios": [
-          {
-            "numero": 1,
-            "titulo": "Amsterdã em Ruínas",
-            "descricao": "Cientistas e guerreiros se unem para planejar a última resistência contra a invasão das máquinas.",
-            "duracao": "12 min",
-            "youtubeId": "R6MlUcmOul8"
+            "numero": 4,
+            "titulo": "Fast Food Masquerade",
+            "descricao": "O cenário de fast-food transforma trabalho rotineiro, máscaras emocionais e desempenho público no episódio mais importante de Gangle.",
+            "duracao": "23min",
+            "youtubeId": "Q9KWcWKo2T8"
           },
           {
-            "numero": 2,
-            "titulo": "O Plano",
-            "descricao": "Um plano arriscado é traçado para reverter os efeitos devastadores da guerra, mas o tempo é curto.",
-            "duracao": "10 min",
-            "youtubeId": "aqz-KE-bpKQ"
+            "numero": 5,
+            "titulo": "Untitled",
+            "descricao": "As aventuras mais curtas dão lugar à pressão nos relacionamentos entre Pomni, Jax e Ragatha.",
+            "duracao": "26min",
+            "youtubeId": "SUBSTITUA_ID_EP5"
+          },
+          {
+            "numero": 6,
+            "titulo": "They All Get Guns",
+            "descricao": "Um confronto sem risco de morte expõe o pânico de Jax, a dureza emprestada de Pomni e a necessidade de aprovação de Caine.",
+            "duracao": "34min",
+            "youtubeId": "mOvhHim78YA"
+          },
+          {
+            "numero": 7,
+            "titulo": "Beach Episode",
+            "descricao": "Uma falsa parada de descanso à beira-mar vira um teste em forma de fuga que abala a confiança do elenco em Caine.",
+            "duracao": "33min",
+            "youtubeId": "oaOG1xOk7XY"
+          },
+          {
+            "numero": 8,
+            "titulo": "hjsakldfhl",
+            "descricao": "O controle de Caine desmorona diante da rejeição, e Kinger se torna relevante para o sistema.",
+            "duracao": "32min",
+            "youtubeId": "SUBSTITUA_ID_EP8"
+          },
+          {
+            "numero": 9,
+            "titulo": "Remember",
+            "descricao": "O episódio final da primeira temporada, combinando os últimos dois atos da história.",
+            "duracao": "58min",
+            "youtubeId": "SUBSTITUA_ID_EP9"
           }
         ]
       }

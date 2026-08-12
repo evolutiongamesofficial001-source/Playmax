@@ -5,6 +5,7 @@
 const STORAGE_KEYS = {
   progressoSeries: 'playmax_progresso_series', // ultimo ep visto por serie
   continuarLista: 'playmax_continuar',         // lista geral (filmes+series) p/ "continuar assistindo"
+  buscasLista: 'playmax_buscas',               // itens abertos a partir de uma busca (p/ destaque)
 };
 
 let FILMES = [];
@@ -12,6 +13,12 @@ let SERIES = [];
 let ytPlayer = null;
 let ytReady = false;
 let currentPlayback = null; // { tipo, id, titulo, youtubeId, temporada, episodio }
+
+/* ---------------- Estado dos filtros ---------------- */
+let filtroTipo = 'todos';           // 'todos' | 'filme' | 'serie'
+let filtrosGenero = new Set();      // tags selecionadas
+let ordenacao = 'padrao';           // 'padrao' | 'az' | 'za'
+let termoBusca = '';
 
 /* ---------------- Utilitários de armazenamento ---------------- */
 function getProgressoSeries(){
@@ -36,6 +43,18 @@ function marcarContinuar(item){
   localStorage.setItem(STORAGE_KEYS.continuarLista, JSON.stringify(lista));
 }
 
+function getBuscas(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEYS.buscasLista)) || []; }
+  catch(e){ return []; }
+}
+function marcarBusca(item){
+  // item: { tipo:'filme'|'serie', id, quando } — registrado quando o item é aberto a partir de uma busca
+  let lista = getBuscas().filter(i => !(i.tipo === item.tipo && i.id === item.id));
+  lista.unshift({ ...item, quando: Date.now() });
+  lista = lista.slice(0, 20);
+  localStorage.setItem(STORAGE_KEYS.buscasLista, JSON.stringify(lista));
+}
+
 /* ---------------- Carregamento dos dados ---------------- */
 async function carregarDados(){
   // Usa os dados embutidos em data.js (funciona mesmo abrindo o index.html direto,
@@ -58,41 +77,68 @@ async function carregarDados(){
     }
   }
   montarHero();
-  montarLinhaFilmes();
-  montarLinhaSeries();
+  montarChipsGenero();
+  aplicarFiltros();
   montarLinhaContinuar();
   montarLinhaRecomendados();
 }
 
 /* ---------------- HERO ---------------- */
-function montarHero(){
-  const destaque = SERIES[0] || FILMES[0];
-  if(!destaque) return;
-  const isSerie = !!destaque.temporadas;
+function escolherDestaque(){
+  // Destaque é sempre um filme: prioriza o mais recente entre "assistido" e "buscado".
+  if(FILMES.length){
+    const assistidos = getContinuar().filter(i => i.tipo === 'filme');
+    const buscados = getBuscas().filter(i => i.tipo === 'filme');
+    const combinados = [...assistidos, ...buscados].sort((a,b) => b.quando - a.quando);
 
-  document.getElementById('heroBg').style.backgroundImage = `url('${destaque.capa}')`;
-  document.getElementById('heroTag').textContent = isSerie ? 'SÉRIE EM DESTAQUE' : 'FILME EM DESTAQUE';
-  document.getElementById('heroTitle').textContent = destaque.titulo;
-  document.getElementById('heroDesc').textContent = destaque.descricao;
+    for(const registro of combinados){
+      const filme = FILMES.find(f => f.id === registro.id);
+      if(filme){
+        const origem = assistidos.includes(registro) ? 'assistido' : 'buscado';
+        return { item: filme, isSerie: false, origem };
+      }
+    }
+    return { item: FILMES[0], isSerie: false, origem: 'padrao' };
+  }
+  // fallback apenas se não houver nenhum filme no catálogo
+  if(SERIES.length) return { item: SERIES[0], isSerie: true, origem: 'padrao' };
+  return null;
+}
+
+function montarHero(){
+  const destaque = escolherDestaque();
+  if(!destaque) return;
+  const { item, isSerie, origem } = destaque;
+
+  const tags = {
+    assistido: 'CONTINUE ASSISTINDO',
+    buscado: 'EM ALTA NA BUSCA',
+    padrao: isSerie ? 'SÉRIE EM DESTAQUE' : 'FILME EM DESTAQUE',
+  };
+
+  document.getElementById('heroBg').style.backgroundImage = `url('${item.capa}')`;
+  document.getElementById('heroTag').textContent = tags[origem];
+  document.getElementById('heroTitle').textContent = item.titulo;
+  document.getElementById('heroDesc').textContent = item.descricao;
 
   const meta = document.getElementById('heroMeta');
   meta.innerHTML = '';
   if(!isSerie){
-    meta.innerHTML = `<span class="meta-badge">${destaque.tempo}</span><span class="meta-badge age">${destaque.classificacao}</span>`;
+    meta.innerHTML = `<span class="meta-badge">${item.tempo}</span><span class="meta-badge age">${item.classificacao}</span>`;
   }else{
-    meta.innerHTML = `<span class="meta-badge">${destaque.temporadas.length} temporada(s)</span><span class="meta-badge age">${destaque.classificacao}</span>`;
+    meta.innerHTML = `<span class="meta-badge">${item.temporadas.length} temporada(s)</span><span class="meta-badge age">${item.classificacao}</span>`;
   }
 
   document.getElementById('heroPlayBtn').onclick = () => {
     if(isSerie){
-      const s = destaque.temporadas[0];
+      const s = item.temporadas[0];
       const e = s.episodios[0];
-      abrirPlayer({ tipo:'serie', item: destaque, temporada: s.numero, episodio: e.numero, ep: e });
+      abrirPlayer({ tipo:'serie', item, temporada: s.numero, episodio: e.numero, ep: e });
     }else{
-      abrirPlayer({ tipo:'filme', item: destaque });
+      abrirPlayer({ tipo:'filme', item });
     }
   };
-  document.getElementById('heroInfoBtn').onclick = () => abrirModalDetalhes(destaque, isSerie);
+  document.getElementById('heroInfoBtn').onclick = () => abrirModalDetalhes(item, isSerie);
 }
 
 /* ---------------- Cards ---------------- */
@@ -108,7 +154,7 @@ function criarCardFilme(filme){
     </div>
     <div class="card-info">
       <h3>${filme.titulo}</h3>
-      <div class="card-sub"><span class="card-badge">${filme.classificacao}</span><span>${filme.tempo}</span></div>
+      <div class="card-sub"><span class="card-badge">${filme.classificacao}</span><span>${filme.tempo}</span>${filme.tags && filme.tags[0] ? `<span class="card-tag">${filme.tags[0]}</span>` : ''}</div>
     </div>`;
   card.onclick = () => abrirModalDetalhes(filme, false);
   return card;
@@ -140,22 +186,121 @@ function criarCardSerie(serie){
     </div>
     <div class="card-info">
       <h3>${serie.titulo}</h3>
-      <div class="card-sub"><span class="card-badge">${serie.classificacao}</span>${prog ? `<span>Continuar ${pctTxt}</span>` : `<span>${serie.temporadas.length} temporada(s)</span>`}</div>
+      <div class="card-sub"><span class="card-badge">${serie.classificacao}</span>${prog ? `<span>Continuar ${pctTxt}</span>` : `<span>${serie.temporadas.length} temporada(s)</span>`}${serie.tags && serie.tags[0] ? `<span class="card-tag">${serie.tags[0]}</span>` : ''}</div>
     </div>`;
   card.onclick = () => abrirModalDetalhes(serie, true);
   return card;
 }
 
 function montarLinhaFilmes(){
-  const track = document.getElementById('rowFilmes');
-  track.innerHTML = '';
-  FILMES.forEach(f => track.appendChild(criarCardFilme(f)));
+  aplicarFiltros();
 }
 function montarLinhaSeries(){
-  const track = document.getElementById('rowSeries');
-  track.innerHTML = '';
-  SERIES.forEach(s => track.appendChild(criarCardSerie(s)));
+  aplicarFiltros();
 }
+
+/* ---------------- Filtros, ordenação e busca ---------------- */
+function montarChipsGenero(){
+  const generos = new Set();
+  [...FILMES, ...SERIES].forEach(item => (item.tags || []).forEach(t => generos.add(t)));
+  const wrap = document.getElementById('filterGenres');
+  if(!wrap) return;
+  wrap.innerHTML = '';
+  [...generos].sort((a,b) => a.localeCompare(b, 'pt-BR')).forEach(genero => {
+    const chip = document.createElement('button');
+    chip.className = 'genre-chip';
+    chip.type = 'button';
+    chip.textContent = genero;
+    chip.onclick = () => {
+      chip.classList.toggle('active');
+      if(chip.classList.contains('active')) filtrosGenero.add(genero);
+      else filtrosGenero.delete(genero);
+      aplicarFiltros();
+    };
+    wrap.appendChild(chip);
+  });
+}
+
+function ordenarLista(lista){
+  if(ordenacao === 'az') return [...lista].sort((a,b) => a.titulo.localeCompare(b.titulo, 'pt-BR'));
+  if(ordenacao === 'za') return [...lista].sort((a,b) => b.titulo.localeCompare(a.titulo, 'pt-BR'));
+  return lista;
+}
+
+function passaFiltros(item){
+  if(filtrosGenero.size && !(item.tags || []).some(t => filtrosGenero.has(t))) return false;
+  if(termoBusca && !item.titulo.toLowerCase().includes(termoBusca)) return false;
+  return true;
+}
+
+function atualizarMensagemVazia(track, temResultados){
+  const anterior = track.parentElement.querySelector('.empty-msg');
+  if(anterior) anterior.remove();
+  if(!temResultados){
+    const msg = document.createElement('p');
+    msg.className = 'empty-msg';
+    msg.textContent = 'Nenhum título encontrado com esses filtros.';
+    track.after(msg);
+  }
+}
+
+function aplicarFiltros(){
+  const filmesSection = document.getElementById('filmesSection');
+  const seriesSection = document.getElementById('seriesSection');
+  const trackF = document.getElementById('rowFilmes');
+  const trackS = document.getElementById('rowSeries');
+
+  const mostraFilmes = filtroTipo === 'todos' || filtroTipo === 'filme';
+  const mostraSeries = filtroTipo === 'todos' || filtroTipo === 'serie';
+
+  filmesSection.style.display = mostraFilmes ? '' : 'none';
+  seriesSection.style.display = mostraSeries ? '' : 'none';
+
+  if(mostraFilmes){
+    const lista = ordenarLista(FILMES.filter(passaFiltros));
+    trackF.innerHTML = '';
+    lista.forEach(f => trackF.appendChild(criarCardFilme(f)));
+    filmesSection.querySelector('.row-title-text').textContent = termoBusca ? `Filmes — resultados para "${termoBusca}"` : 'Filmes';
+    document.getElementById('countFilmes').textContent = `${lista.length} título${lista.length === 1 ? '' : 's'}`;
+    atualizarMensagemVazia(trackF, lista.length > 0);
+  }
+  if(mostraSeries){
+    const lista = ordenarLista(SERIES.filter(passaFiltros));
+    trackS.innerHTML = '';
+    lista.forEach(s => trackS.appendChild(criarCardSerie(s)));
+    seriesSection.querySelector('.row-title-text').textContent = termoBusca ? `Séries — resultados para "${termoBusca}"` : 'Séries';
+    document.getElementById('countSeries').textContent = `${lista.length} título${lista.length === 1 ? '' : 's'}`;
+    atualizarMensagemVazia(trackS, lista.length > 0);
+  }
+}
+
+document.querySelectorAll('#filterTypes .filter-pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#filterTypes .filter-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filtroTipo = btn.dataset.tipo;
+    aplicarFiltros();
+  });
+});
+
+document.getElementById('sortSelect').addEventListener('change', (e) => {
+  ordenacao = e.target.value;
+  aplicarFiltros();
+});
+
+document.getElementById('filterClear').addEventListener('click', () => {
+  filtroTipo = 'todos';
+  filtrosGenero.clear();
+  ordenacao = 'padrao';
+  termoBusca = '';
+
+  document.getElementById('searchInput').value = '';
+  document.getElementById('sortSelect').value = 'padrao';
+  document.querySelectorAll('#filterTypes .filter-pill').forEach(b => b.classList.toggle('active', b.dataset.tipo === 'todos'));
+  document.querySelectorAll('.genre-chip').forEach(c => c.classList.remove('active'));
+
+  aplicarFiltros();
+});
 
 function montarLinhaContinuar(){
   const lista = getContinuar();
@@ -170,6 +315,7 @@ function montarLinhaContinuar(){
     if(!obj) return;
     track.appendChild(item.tipo === 'filme' ? criarCardFilme(obj) : criarCardSerie(obj));
   });
+  document.getElementById('countContinuar').textContent = `${track.children.length} título${track.children.length === 1 ? '' : 's'}`;
   section.style.display = track.children.length ? 'block' : 'none';
 }
 
@@ -198,10 +344,16 @@ function montarLinhaRecomendados(){
   recomendados.slice(0, 10).forEach(item => {
     track.appendChild(item._tipo === 'filme' ? criarCardFilme(item) : criarCardSerie(item));
   });
+  document.getElementById('countRecomendados').textContent = `${track.children.length} título${track.children.length === 1 ? '' : 's'}`;
 }
 
 /* ---------------- Modal de detalhes ---------------- */
 function abrirModalDetalhes(item, isSerie){
+  if(termoBusca){
+    marcarBusca({ tipo: isSerie ? 'serie' : 'filme', id: item.id });
+    montarHero();
+  }
+
   const modal = document.getElementById('detailModal');
   document.getElementById('modalBanner').style.backgroundImage = `url('${item.capa}')`;
   document.getElementById('modalTitle').textContent = item.titulo;
@@ -349,6 +501,7 @@ function abrirPlayer({ tipo, item, temporada, episodio, ep }){
   montarLinhaContinuar();
   montarLinhaRecomendados();
   if(tipo === 'serie') montarLinhaSeries();
+  montarHero();
 }
 
 function avancarEpisodio(){
@@ -434,23 +587,8 @@ document.querySelectorAll('.nav-link').forEach(link => {
 
 /* ---------------- Busca ---------------- */
 document.getElementById('searchInput').addEventListener('input', (e) => {
-  const termo = e.target.value.trim().toLowerCase();
-  const filtrarFilmes = termo ? FILMES.filter(f => f.titulo.toLowerCase().includes(termo)) : FILMES;
-  const filtrarSeries = termo ? SERIES.filter(s => s.titulo.toLowerCase().includes(termo)) : SERIES;
-
-  const trackF = document.getElementById('rowFilmes');
-  const trackS = document.getElementById('rowSeries');
-  trackF.innerHTML = ''; trackS.innerHTML = '';
-  filtrarFilmes.forEach(f => trackF.appendChild(criarCardFilme(f)));
-  filtrarSeries.forEach(s => trackS.appendChild(criarCardSerie(s)));
-
-  if(termo){
-    trackF.parentElement.querySelector('.row-title').textContent = `Filmes — resultados para "${termo}"`;
-    trackS.parentElement.querySelector('.row-title').textContent = `Séries — resultados para "${termo}"`;
-  }else{
-    trackF.parentElement.querySelector('.row-title').textContent = 'Filmes';
-    trackS.parentElement.querySelector('.row-title').textContent = 'Séries';
-  }
+  termoBusca = e.target.value.trim().toLowerCase();
+  aplicarFiltros();
 });
 
 /* ---------------- Init ---------------- */

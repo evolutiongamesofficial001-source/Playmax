@@ -1,71 +1,42 @@
 [
   {
     "id": "f001",
-    "titulo": "Renuncia- O preço da verdade",
-    "descricao": "importância de manter princípios firmes e a necessidade de escolhas difíceis (renúncias) para seguir a fé cristã diante das pressões da sociedade.",
+    "titulo": "Renúncia - O preço da verdade",
+    "descricao": "A importância de manter princípios firmes e a necessidade de escolhas difíceis (renúncias) para seguir a fé cristã diante das pressões da sociedade.",
     "tempo": "2H",
     "classificacao": "10 Anos",
     "capa": "https://img.youtube.com/vi/rrt_zOnKeMg/maxresdefault.jpg",
     "youtubeId": "rrt_zOnKeMg",
-    "tags": [
-      "Brasileiro",
-      "Cristão",
-      "família"
-    ]
+    "tags": ["Brasileiro", "Cristão", "Família"]
   },
   {
     "id": "f002",
-    "titulo": "Sintel",
-    "descricao": "Uma jovem solitária parte em uma jornada épica para encontrar o dragão bebê que criou e que foi levado dela. Uma aventura sombria e emocionante.",
-    "tempo": "15 min",
-    "classificacao": "12",
-    "capa": "https://durian.blender.org/wp-content/uploads/2010/06/sintel_poster_bg.jpg",
-    "youtubeId": "eRsGyueVLvQ",
-    "tags": [
-      "aventura",
-      "fantasia",
-      "drama"
-    ]
+    "titulo": "Deep Web - Show da Morte",
+    "descricao": "Um grupo de amigos decide entrar na Deep Web para assistir a um show de terror, mas acabam se envolvendo em uma trama de assassinatos e mistérios.",
+    "tempo": "1H 18min",
+    "classificacao": "18 Anos",
+    "capa": "https://img.youtube.com/vi/zwhdPTxjqi4/maxresdefault.jpg",
+    "youtubeId": "zwhdPTxjqi4",
+    "tags": ["Terror", "Suspense"]
   },
-  {
-    "id": "f003",
-    "titulo": "Tears of Steel",
-    "descricao": "No futuro, um grupo de guerreiros e cientistas se reúne em Amsterdã para tentar reverter os efeitos devastadores de uma guerra contra máquinas.",
-    "tempo": "12 min",
-    "classificacao": "14",
-    "capa": "https://mango.blender.org/wp-content/uploads/2013/05/01_thom_celia_bridge.jpg",
-    "youtubeId": "R6MlUcmOul8",
-    "tags": [
-      "ficção científica",
-      "ação"
-    ]
-  },
-  {
+   {
     "id": "f004",
-    "titulo": "Cosmos Laundromat",
-    "descricao": "Um carneiro suicida contrata um vendedor peculiar para lhe dar uma última e inusitada chance na vida, em uma aventura surreal pelo espaço.",
-    "tempo": "12 min",
-    "classificacao": "16",
-    "capa": "https://cloud.blender.org/uploads/gallery/renders/2015/09/franck_hero.jpg",
-    "youtubeId": "Y-rmzh0PI3c",
-    "tags": [
-      "surreal",
-      "comédia",
-      "drama"
-    ]
+    "titulo": "Radioactive - A História de Marie Curie",
+    "descricao": "A história de Marie Curie, uma cientista pioneira que revolucionou a ciência com suas descobertas sobre radioatividade.",
+    "tempo": "1H 42min",
+    "classificacao": "10 Anos",
+    "capa": "https://img.youtube.com/vi/y5FVCeyfns0/maxresdefault.jpg",
+    "youtubeId": "y5FVCeyfns0",
+    "tags": ["Drama"]
   },
-  {
-    "id": "f005",
-    "titulo": "Spring",
-    "descricao": "Um cervo idoso sente a chegada da primavera e revive, em suas memórias, o ciclo eterno entre vida, sacrifício e renovação da natureza.",
-    "tempo": "7 min",
-    "classificacao": "Livre",
-    "capa": "https://blog.blender.org/wp-content/uploads/2019/04/spring-title.jpg",
-    "youtubeId": "WhWc3b3KhnY",
-    "tags": [
-      "animação",
-      "natureza",
-      "família"
-    ]
+   {
+    "id": "f003",
+    "titulo": "Hacker: Todo Crime Tem um Início",
+    "descricao": "Alex é um jovem imigrante ucraniano com uma mente genial para a computação. Diante de uma grave crise financeira que ameaça sua família, ele decide usar suas habilidades virtuais para fazer justiça com as próprias mãos e ganhar dinheiro rápido. Ao lado de Sye, um negociante do mercado negro, e Kira, uma jovem hacker rebelde, ele começa a aplicar golpes financeiros sofisticados e roubos de identidade na internet. O sucesso do trio chama a atenção de uma rede criminosa internacional e desperta a fúria do sistema bancário global. O que era um plano de sobrevivência digital transforma-se em um perigoso jogo real de vida ou morte. Um thriller de ação tecnológica tenso e eletrizante.",
+    "tempo": "1H 35min",
+    "classificacao": "17 Anos",
+    "capa": "https://img.youtube.com/vi/znZ2lMGLPys/maxresdefault.jpg",
+    "youtubeId": "znZ2lMGLPys",
+    "tags": ["Ação"]
   }
 ]
