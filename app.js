@@ -38,16 +38,24 @@ function marcarContinuar(item){
 
 /* ---------------- Carregamento dos dados ---------------- */
 async function carregarDados(){
-  try{
-    const [rFilmes, rSeries] = await Promise.all([
-      fetch('filmes.json'),
-      fetch('series.json')
-    ]);
-    FILMES = await rFilmes.json();
-    SERIES = await rSeries.json();
-  }catch(e){
-    console.error('Erro ao carregar catálogo:', e);
-    FILMES = []; SERIES = [];
+  // Usa os dados embutidos em data.js (funciona mesmo abrindo o index.html direto,
+  // sem precisar de servidor). Se por algum motivo não estiverem disponíveis,
+  // tenta buscar os arquivos .json (útil quando o site está hospedado num servidor).
+  if(typeof FILMES_DATA !== 'undefined' && typeof SERIES_DATA !== 'undefined'){
+    FILMES = FILMES_DATA;
+    SERIES = SERIES_DATA;
+  }else{
+    try{
+      const [rFilmes, rSeries] = await Promise.all([
+        fetch('filmes.json'),
+        fetch('series.json')
+      ]);
+      FILMES = await rFilmes.json();
+      SERIES = await rSeries.json();
+    }catch(e){
+      console.error('Erro ao carregar catálogo:', e);
+      FILMES = []; SERIES = [];
+    }
   }
   montarHero();
   montarLinhaFilmes();

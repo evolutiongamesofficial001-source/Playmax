@@ -5,9 +5,13 @@
     "descricao": "importância de manter princípios firmes e a necessidade de escolhas difíceis (renúncias) para seguir a fé cristã diante das pressões da sociedade.",
     "tempo": "2H",
     "classificacao": "10 Anos",
-    "capa": "https://share.google/7VcUU0cg0DDdsE5OQ",
+    "capa": "https://img.youtube.com/vi/rrt_zOnKeMg/maxresdefault.jpg",
     "youtubeId": "rrt_zOnKeMg",
-    "tags": ["Brasileiro", "Cristão", "família"]
+    "tags": [
+      "Brasileiro",
+      "Cristão",
+      "família"
+    ]
   },
   {
     "id": "f002",
@@ -17,7 +21,11 @@
     "classificacao": "12",
     "capa": "https://durian.blender.org/wp-content/uploads/2010/06/sintel_poster_bg.jpg",
     "youtubeId": "eRsGyueVLvQ",
-    "tags": ["aventura", "fantasia", "drama"]
+    "tags": [
+      "aventura",
+      "fantasia",
+      "drama"
+    ]
   },
   {
     "id": "f003",
@@ -27,7 +35,10 @@
     "classificacao": "14",
     "capa": "https://mango.blender.org/wp-content/uploads/2013/05/01_thom_celia_bridge.jpg",
     "youtubeId": "R6MlUcmOul8",
-    "tags": ["ficção científica", "ação"]
+    "tags": [
+      "ficção científica",
+      "ação"
+    ]
   },
   {
     "id": "f004",
@@ -37,7 +48,11 @@
     "classificacao": "16",
     "capa": "https://cloud.blender.org/uploads/gallery/renders/2015/09/franck_hero.jpg",
     "youtubeId": "Y-rmzh0PI3c",
-    "tags": ["surreal", "comédia", "drama"]
+    "tags": [
+      "surreal",
+      "comédia",
+      "drama"
+    ]
   },
   {
     "id": "f005",
@@ -47,6 +62,10 @@
     "classificacao": "Livre",
     "capa": "https://blog.blender.org/wp-content/uploads/2019/04/spring-title.jpg",
     "youtubeId": "WhWc3b3KhnY",
-    "tags": ["animação", "natureza", "família"]
+    "tags": [
+      "animação",
+      "natureza",
+      "família"
+    ]
   }
 ]
