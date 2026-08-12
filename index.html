@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>PLAYMAX — Seu streaming</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header" id="header">
+  <div class="header-inner">
+    <div class="logo">PLAY<span>MAX</span></div>
+
+    <nav class="nav" id="mainNav">
+      <a href="#" class="nav-link active" data-target="home">Início</a>
+      <a href="#" class="nav-link" data-target="filmes">Filmes</a>
+      <a href="#" class="nav-link" data-target="series">Séries</a>
+      <a href="#" class="nav-link" data-target="continuar">Continuar assistindo</a>
+      <a href="#" class="nav-link" data-target="recomendados">Recomendados</a>
+    </nav>
+
+    <div class="header-actions">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" class="icon-search"><path d="M21 21l-4.35-4.35m1.35-5.15a7 7 0 11-14 0 7 7 0 0114 0z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        <input type="text" id="searchInput" placeholder="Buscar títulos...">
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-gradient"></div>
+  <div class="hero-content">
+    <p class="hero-tag" id="heroTag">EM DESTAQUE</p>
+    <h1 class="hero-title" id="heroTitle">Carregando...</h1>
+    <p class="hero-desc" id="heroDesc"></p>
+    <div class="hero-meta" id="heroMeta"></div>
+    <div class="hero-buttons">
+      <button class="btn btn-primary" id="heroPlayBtn">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+        Assistir
+      </button>
+      <button class="btn btn-secondary" id="heroInfoBtn">+ Detalhes</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTEÚDO PRINCIPAL ===== -->
+<main class="main">
+
+  <section class="row-section" id="continuarSection" style="display:none;">
+    <h2 class="row-title">Continuar assistindo</h2>
+    <div class="row-track" id="rowContinuar"></div>
+  </section>
+
+  <section class="row-section" id="filmesSection">
+    <h2 class="row-title">Filmes</h2>
+    <div class="row-track" id="rowFilmes"></div>
+  </section>
+
+  <section class="row-section" id="seriesSection">
+    <h2 class="row-title">Séries</h2>
+    <div class="row-track" id="rowSeries"></div>
+  </section>
+
+  <section class="row-section" id="recomendadosSection">
+    <h2 class="row-title">Recomendados para você</h2>
+    <div class="row-track" id="rowRecomendados"></div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>PLAYMAX &copy; 2026 — Feito para maratonar em qualquer tela.</p>
+</footer>
+
+<!-- ===== MODAL DE DETALHES ===== -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal-box">
+    <button class="modal-close" id="closeDetailModal">&times;</button>
+    <div class="modal-banner" id="modalBanner"></div>
+    <div class="modal-body">
+      <h2 id="modalTitle"></h2>
+      <div class="hero-meta" id="modalMeta"></div>
+      <p id="modalDesc"></p>
+      <div class="tags" id="modalTags"></div>
+
+      <button class="btn btn-primary" id="modalPlayBtn">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+        Assistir agora
+      </button>
+
+      <div id="seasonsWrap" class="seasons-wrap" style="display:none;">
+        <div class="season-selector" id="seasonSelector"></div>
+        <div class="episode-list" id="episodeList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PLAYER ===== -->
+<div class="player-overlay" id="playerOverlay">
+  <div class="player-topbar">
+    <button class="player-back" id="playerBack">
+      <svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Voltar
+    </button>
+    <span class="player-title" id="playerTitle"></span>
+    <button class="player-fullscreen" id="playerFullscreen" title="Tela cheia">
+      <svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+  <div class="player-frame-wrap" id="playerFrameWrap">
+    <div id="ytPlayer"></div>
+  </div>
+</div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+[
+  {
+    "id": "s001",
+    "titulo": "Blender Open Movies: Coleção",
+    "descricao": "Uma antologia de curtas-metragens experimentais criados pela comunidade Blender, explorando animação, efeitos visuais e narrativas originais em cada episódio.",
+    "classificacao": "12",
+    "capa": "https://peach.blender.org/wp-content/uploads/title_anouncement.jpg?x11217",
+    "tags": ["animação", "antologia", "criatividade"],
+    "temporadas": [
+      {
+        "numero": 1,
+        "episodios": [
+          {
+            "numero": 1,
+            "titulo": "O Despertar",
+            "descricao": "Um herói acorda em um mundo desconhecido e precisa entender as regras do lugar antes que seja tarde demais.",
+            "duracao": "9 min",
+            "youtubeId": "aqz-KE-bpKQ"
+          },
+          {
+            "numero": 2,
+            "titulo": "A Travessia",
+            "descricao": "A jornada continua por terras hostis, testando os limites físicos e emocionais dos personagens.",
+            "duracao": "14 min",
+            "youtubeId": "eRsGyueVLvQ"
+          },
+          {
+            "numero": 3,
+            "titulo": "O Confronto",
+            "descricao": "As tensões chegam ao limite em um confronto que muda o rumo de toda a história.",
+            "duracao": "11 min",
+            "youtubeId": "R6MlUcmOul8"
+          }
+        ]
+      },
+      {
+        "numero": 2,
+        "episodios": [
+          {
+            "numero": 1,
+            "titulo": "Novos Horizontes",
+            "descricao": "Uma nova temporada começa com personagens inéditos explorando territórios ainda maiores.",
+            "duracao": "12 min",
+            "youtubeId": "Y-rmzh0PI3c"
+          },
+          {
+            "numero": 2,
+            "titulo": "Renascer",
+            "descricao": "Entre memórias e o presente, um personagem reflete sobre ciclos de vida e recomeços.",
+            "duracao": "7 min",
+            "youtubeId": "WhWc3b3KhnY"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "s002",
+    "titulo": "Crônicas do Futuro",
+    "descricao": "Em um mundo dominado por tecnologia avançada, um grupo de sobreviventes luta para restaurar a humanidade após uma guerra contra máquinas.",
+    "classificacao": "16",
+    "capa": "https://mango.blender.org/wp-content/uploads/2013/05/01_thom_celia_bridge.jpg",
+    "tags": ["ficção científica", "ação", "drama"],
+    "temporadas": [
+      {
+        "numero": 1,
+        "episodios": [
+          {
+            "numero": 1,
+            "titulo": "Amsterdã em Ruínas",
+            "descricao": "Cientistas e guerreiros se unem para planejar a última resistência contra a invasão das máquinas.",
+            "duracao": "12 min",
+            "youtubeId": "R6MlUcmOul8"
+          },
+          {
+            "numero": 2,
+            "titulo": "O Plano",
+            "descricao": "Um plano arriscado é traçado para reverter os efeitos devastadores da guerra, mas o tempo é curto.",
+            "duracao": "10 min",
+            "youtubeId": "aqz-KE-bpKQ"
+          }
+        ]
+      }
+    ]
+  }
+]
