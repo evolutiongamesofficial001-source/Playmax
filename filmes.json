@@ -38,5 +38,105 @@
     "capa": "https://img.youtube.com/vi/znZ2lMGLPys/maxresdefault.jpg",
     "youtubeId": "znZ2lMGLPys",
     "tags": ["Ação"]
+  },
+   {
+    "id": "f005",
+    "titulo": "JACK: A Caixa Maldita",
+    "descricao": "Quando um brinquedo antigo é doado a um museu localizado no coração de uma floresta, a funcionária Casey Reynolds passa a acreditar que o palhaço mecânico esconde um mal sobrenatural, dando início a uma onda de terror.",
+    "tempo": "1H 30min",
+    "classificacao": "14 Anos",
+    "capa": "https://img.youtube.com/vi/winltOw-xpk/maxresdefault.jpg",
+    "youtubeId": "winltOw-xpk",
+    "tags": ["Terror"]
+  },
+  {
+    "id": "f006",
+    "titulo": "O Jardim Secreto",
+    "descricao": "Mary Lennox, uma menina de 10 anos que acaba de ficar órfã, é enviada para viver com o tio Archibald Craven (Colin Firth) em uma mansão na Inglaterra. Solitária, ela descobre um jardim secreto e mágico na propriedade, embarcando em uma jornada de cura e amizade.",
+    "tempo": "1H 39min",
+    "classificacao": "10 Anos",
+    "capa": "https://img.youtube.com/vi/vA2QB4rpJRA/maxresdefault.jpg",
+    "youtubeId": "vA2QB4rpJRA",
+    "tags": ["Drama", "Fantasia"]
+  },
+  {
+    "id": "f007",
+    "titulo": "O Limite do Prazer",
+    "descricao": "Quando o recluso Franklin trai sua namorada com uma mulher misteriosa que conheceu em um aplicativo de namoro, isso se torna o início de uma obsessão perigosa e mortal.",
+    "tempo": "1H 30min",
+    "classificacao": "18 Anos",
+    "capa": "https://img.youtube.com/vi/mewr_AS1KOY/maxresdefault.jpg",
+    "youtubeId": "mewr_AS1KOY",
+    "tags": ["Aventura"]
+  },
+  {
+    "id": "f008",
+    "titulo": "O Julgamento do Diabo",
+    "descricao": "Um escritor desesperado faz um pacto com o Diabo, trocando sua alma por dez anos de fama e sucesso. Quando a conta chega, ele recorre a um renomado advogado para tentar anular o acordo em um julgamento na Corte do Inferno.",
+    "tempo": "1H 46min",
+    "classificacao": "12 Anos",
+    "capa": "https://img.youtube.com/vi/zXa3yfzVc74/maxresdefault.jpg",
+    "youtubeId": "zXa3yfzVc74",
+    "tags": ["Comédia"]
+  },
+  {
+    "id": "f009",
+    "titulo": "Sobreviver à Noite",
+    "descricao": "Dois criminosos implacáveis invadem a casa de um médico em decadência para conseguir atendimento após um assalto que deu errado, forçando a família a lutar pela sobrevivência durante uma longa noite de tensão.",
+    "tempo": "1H 30min",
+    "classificacao": "16 Anos",
+    "capa": "https://img.youtube.com/vi/HgBIYP9QzlI/maxresdefault.jpg",
+    "youtubeId": "HgBIYP9QzlI",
+    "tags": ["Suspense", "Ação"]
+  },
+  {
+    "id": "f010",
+    "titulo": "Turbulência 3",
+    "descricao": "Uma estrela do rock decide dar seu show de despedida a bordo de um jumbo 747 em pleno voo, transmitido ao vivo pela internet — até que a viagem é sequestrada e ganha proporções mortais.",
+    "tempo": "1H 38min",
+    "classificacao": "12 Anos",
+    "capa": "https://img.youtube.com/vi/7ycNhV-JeiA/maxresdefault.jpg",
+    "youtubeId": "7ycNhV-JeiA",
+    "tags": ["Ação"]
+  },
+  {
+    "id": "f011",
+    "titulo": "Halloween 2",
+    "descricao": "Após sobreviver a uma tentativa de assassinato, Laurie Strode é internada em um hospital, mas o assassino mascarado Michael Myers a segue até lá, decidido a terminar o que começou na noite de Halloween.",
+    "tempo": "1H 32min",
+    "classificacao": "16 Anos",
+    "capa": "https://img.youtube.com/vi/clR2xgYYIGw/maxresdefault.jpg",
+    "youtubeId": "clR2xgYYIGw",
+    "tags": ["Terror"]
+  },
+  {
+    "id": "f012",
+    "titulo": "A Face Oculta da Lei",
+    "descricao": "A investigação de um roubo seguido de homicídio desencadeia uma série de eventos que levam um policial corrupto do LAPD a questionar suas próprias táticas e lealdades.",
+    "tempo": "1H 53min",
+    "classificacao": "18 Anos",
+    "capa": "https://img.youtube.com/vi/OV3tS3A9pbo/maxresdefault.jpg",
+    "youtubeId": "OV3tS3A9pbo",
+    "tags": ["Ação"]
+  },
+  {
+    "id": "f013",
+    "titulo": "Swingers - Troca de Casais",
+    "descricao": "Dois casais entediados com suas vidas cotidianas decidem se encontrar para uma experiência de troca de casais que acaba não sendo tão bem planejada quanto imaginavam.",
+    "tempo": "1H 20min",
+    "classificacao": "18 Anos",
+    "capa": "https://img.youtube.com/vi/cOF9uNXeXNY/maxresdefault.jpg",
+    "youtubeId": "cOF9uNXeXNY",
+    "tags": ["Comédia"]
+  },
+  {
+    "id": "f014",
+    "titulo": "À Espreita do Mal",
+    "descricao": "O desaparecimento de um garoto de 12 anos leva um detetive a se envolver na investigação, enquanto uma presença maligna começa a perturbar sua própria família.",
+    "tempo": "1H 38min",
+    "classificacao": "14 Anos",
+    "capa": "https://img.youtube.com/vi/-FOZ2Xd6PKg/maxresdefault.jpg",
+    "youtubeId": "-FOZ2Xd6PKg",
+    "tags": ["Terror"]
   }
 ]

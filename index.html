@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="google-site-verification" content="bizHLzEL_yWnrSaZVUYmzspK3A3iecHJDueAfn7n36A" />
 <title>PLAYMAX — Seu streaming</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,8 +21,10 @@
       <a href="#" class="nav-link active" data-target="home">Início</a>
       <a href="#" class="nav-link" data-target="filmes">Filmes</a>
       <a href="#" class="nav-link" data-target="series">Séries</a>
+      <a href="#" class="nav-link" data-target="catalogo">Catálogo</a>
       <a href="#" class="nav-link" data-target="continuar">Continuar assistindo</a>
-      <a href="#" class="nav-link" data-target="recomendados">Recomendados</a>
+      <a href="#" class="nav-link" data-target="recomendados">Para você</a>
+      <a href="#" class="nav-link" data-target="conta" id="navConta" style="display:none;">Minha conta</a>
     </nav>
 
     <div class="header-actions">
@@ -29,12 +32,76 @@
         <svg viewBox="0 0 24 24" class="icon-search"><path d="M21 21l-4.35-4.35m1.35-5.15a7 7 0 11-14 0 7 7 0 0114 0z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
         <input type="text" id="searchInput" placeholder="Buscar títulos...">
       </div>
+      <button class="account-btn" id="accountBtn">
+        <span class="account-avatar" id="accountAvatar">?</span>
+        <span class="account-label" id="accountLabel">Entrar</span>
+      </button>
       <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
         <span></span><span></span><span></span>
       </button>
     </div>
   </div>
 </header>
+
+<!-- ===== MODAL DE CONTA ===== -->
+<div class="modal-overlay auth-overlay" id="authModal">
+  <div class="modal-box auth-box">
+    <button class="modal-close" id="closeAuthModal">&times;</button>
+    <p class="auth-age-notice" id="authAgeNotice" style="display:none;">🔒 Este título é para maiores de 18 anos. Entre ou crie uma conta para assistir.</p>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-tab="login" id="tabLogin">Entrar</button>
+      <button class="auth-tab" data-tab="cadastro" id="tabCadastro">Criar conta</button>
+    </div>
+
+    <div class="auth-panel" id="painelLogin">
+      <h2 class="auth-title">Bem-vindo de volta</h2>
+      <p class="auth-sub">Entre para avaliar títulos e sincronizar seu perfil.</p>
+      <form id="formLogin" class="auth-form" autocomplete="on">
+        <label class="auth-field">
+          <span>E-mail</span>
+          <input type="email" id="loginEmail" required placeholder="voce@email.com" autocomplete="email">
+        </label>
+        <label class="auth-field">
+          <span>Senha</span>
+          <input type="password" id="loginSenha" required placeholder="••••••••" autocomplete="current-password" minlength="6">
+        </label>
+        <p class="auth-error" id="loginErro"></p>
+        <button type="submit" class="btn btn-primary auth-submit" id="loginSubmitBtn">Entrar</button>
+      </form>
+    </div>
+
+    <div class="auth-panel" id="painelCadastro" style="display:none;">
+      <h2 class="auth-title">Criar sua conta</h2>
+      <p class="auth-sub">Leva menos de um minuto.</p>
+      <form id="formCadastro" class="auth-form" autocomplete="on">
+        <label class="auth-field">
+          <span>E-mail</span>
+          <input type="email" id="cadEmail" required placeholder="voce@email.com" autocomplete="email">
+        </label>
+        <label class="auth-field">
+          <span>Senha</span>
+          <input type="password" id="cadSenha" required placeholder="Mínimo 6 caracteres" autocomplete="new-password" minlength="6">
+        </label>
+        <label class="auth-field">
+          <span>Confirmar senha</span>
+          <input type="password" id="cadSenhaConfirma" required placeholder="Repita a senha" autocomplete="new-password" minlength="6">
+        </label>
+        <p class="auth-error" id="cadErro"></p>
+        <button type="submit" class="btn btn-primary auth-submit" id="cadSubmitBtn">Criar conta</button>
+      </form>
+    </div>
+
+    <div class="auth-panel" id="painelPerfil" style="display:none;">
+      <h2 class="auth-title">Sua conta</h2>
+      <div class="auth-profile">
+        <span class="account-avatar account-avatar-lg" id="perfilAvatar">?</span>
+        <p class="auth-profile-email" id="perfilEmail"></p>
+      </div>
+      <button class="btn btn-secondary auth-submit" id="logoutBtn">Sair da conta</button>
+    </div>
+  </div>
+</div>
 
 <!-- ===== HERO ===== -->
 <section class="hero" id="hero">
@@ -45,37 +112,13 @@
     <h1 class="hero-title" id="heroTitle">Carregando...</h1>
     <p class="hero-desc" id="heroDesc"></p>
     <div class="hero-meta" id="heroMeta"></div>
+    <div class="hero-rating" id="heroRating"></div>
     <div class="hero-buttons">
       <button class="btn btn-primary" id="heroPlayBtn">
         <svg viewBox="0 0 24 24" width="20" height="20"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
         Assistir
       </button>
       <button class="btn btn-secondary" id="heroInfoBtn">+ Detalhes</button>
-    </div>
-  </div>
-</section>
-
-<!-- ===== FILTROS ===== -->
-<section class="filter-bar" id="filterBar" aria-label="Filtros do catálogo">
-  <div class="filter-inner">
-    <span class="filter-label">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16M7 12h10M10 19h4"/></svg>
-      Filtrar
-    </span>
-    <div class="filter-divider"></div>
-    <div class="filter-group filter-types" id="filterTypes">
-      <button class="filter-pill active" data-tipo="todos">Todos</button>
-      <button class="filter-pill" data-tipo="filme">Filmes</button>
-      <button class="filter-pill" data-tipo="serie">Séries</button>
-    </div>
-    <div class="filter-genres" id="filterGenres"></div>
-    <div class="filter-sort">
-      <select id="sortSelect" class="sort-select" aria-label="Ordenar catálogo">
-        <option value="padrao">Relevância</option>
-        <option value="az">Título A–Z</option>
-        <option value="za">Título Z–A</option>
-      </select>
-      <button class="filter-clear" id="filterClear">Limpar</button>
     </div>
   </div>
 </section>
@@ -92,31 +135,113 @@
     <div class="row-track" id="rowContinuar"></div>
   </section>
 
-  <section class="row-section" id="filmesSection">
-    <h2 class="row-title">
-      <svg class="row-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M7 6l2.5-3h5L17 6M3 10h18"/></svg>
-      <span class="row-title-text">Filmes</span>
-      <span class="row-count" id="countFilmes"></span>
-    </h2>
-    <div class="row-track" id="rowFilmes"></div>
+  <!-- Linhas dinâmicas estilo Netflix: Para você, gêneros (ex: Terror), família, semelhantes... -->
+  <div class="rows-home" id="rowsHome"></div>
+
+  <!-- ===== PÁGINA DE CATÁLOGO COMPLETO ===== -->
+  <section class="catalog-page" id="catalogoSection" style="display:none;">
+    <div class="catalog-header">
+      <h1>Catálogo completo</h1>
+      <p>Todos os títulos do PLAYMAX em um só lugar. Filtre, ordene ou busque o que quiser assistir.</p>
+    </div>
+
+    <section class="filter-bar filter-bar-inline" id="filterBar" aria-label="Filtros do catálogo">
+      <div class="filter-inner">
+        <span class="filter-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16M7 12h10M10 19h4"/></svg>
+          Filtrar
+        </span>
+        <div class="filter-divider"></div>
+        <div class="filter-group filter-types" id="filterTypes">
+          <button class="filter-pill active" data-tipo="todos">Todos</button>
+          <button class="filter-pill" data-tipo="filme">Filmes</button>
+          <button class="filter-pill" data-tipo="serie">Séries</button>
+        </div>
+        <div class="filter-genres" id="filterGenres"></div>
+        <div class="filter-sort">
+          <select id="sortSelect" class="sort-select" aria-label="Ordenar catálogo">
+            <option value="padrao">Relevância</option>
+            <option value="az">Título A–Z</option>
+            <option value="za">Título Z–A</option>
+          </select>
+          <button class="filter-clear" id="filterClear">Limpar</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="catalog-count" id="catalogCount"></div>
+    <div class="catalog-grid" id="catalogGrid"></div>
   </section>
 
-  <section class="row-section" id="seriesSection">
-    <h2 class="row-title">
-      <svg class="row-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="13" rx="2"/><path d="M8 21h8M12 18v3"/></svg>
-      <span class="row-title-text">Séries</span>
-      <span class="row-count" id="countSeries"></span>
-    </h2>
-    <div class="row-track" id="rowSeries"></div>
-  </section>
+  <!-- ===== PÁGINA DE CONTA ===== -->
+  <section class="account-page" id="contaSection" style="display:none;">
+    <div class="account-hero">
+      <span class="account-avatar account-avatar-lg" id="contaAvatar">?</span>
+      <div>
+        <h1 id="contaEmail">—</h1>
+        <p id="contaDesde">Membro desde —</p>
+      </div>
+      <button class="btn btn-secondary" id="contaLogoutBtn">Sair da conta</button>
+    </div>
 
-  <section class="row-section" id="recomendadosSection">
-    <h2 class="row-title">
-      <svg class="row-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.2 5.6L20 10l-4.6 3.7L16.8 20 12 16.6 7.2 20l1.4-6.3L4 10l5.8-1.4L12 3z"/></svg>
-      <span class="row-title-text">Recomendados para você</span>
-      <span class="row-count" id="countRecomendados"></span>
-    </h2>
-    <div class="row-track" id="rowRecomendados"></div>
+    <div class="account-stats" id="contaStats"></div>
+
+    <div class="account-card account-genres-card">
+      <h2>Gêneros favoritos</h2>
+      <div class="tags" id="contaGeneros"></div>
+    </div>
+
+    <div class="account-grid">
+      <div class="account-card">
+        <h2>Perfil</h2>
+        <form id="formApelido" class="auth-form">
+          <label class="auth-field">
+            <span>Apelido (exibido no lugar do e-mail)</span>
+            <input type="text" id="apelidoInput" maxlength="24" placeholder="Como quer ser chamado?">
+          </label>
+          <p class="auth-error" id="apelidoErro"></p>
+          <p class="auth-success" id="apelidoSucesso"></p>
+          <button type="submit" class="btn btn-primary auth-submit" id="apelidoSubmitBtn">Salvar apelido</button>
+        </form>
+      </div>
+
+      <div class="account-card">
+        <h2>Alterar senha</h2>
+        <form id="formSenha" class="auth-form">
+          <label class="auth-field">
+            <span>Senha atual</span>
+            <input type="password" id="senhaAtual" required minlength="6" autocomplete="current-password">
+          </label>
+          <label class="auth-field">
+            <span>Nova senha</span>
+            <input type="password" id="senhaNova" required minlength="6" autocomplete="new-password">
+          </label>
+          <p class="auth-error" id="senhaErro"></p>
+          <p class="auth-success" id="senhaSucesso"></p>
+          <button type="submit" class="btn btn-primary auth-submit" id="senhaSubmitBtn">Salvar nova senha</button>
+        </form>
+      </div>
+
+      <div class="account-card">
+        <h2>Continuar assistindo</h2>
+        <div class="account-avaliacoes-list" id="contaContinuarList">
+          <p class="account-empty">Nada por aqui ainda.</p>
+        </div>
+      </div>
+
+      <div class="account-card">
+        <h2>Suas avaliações</h2>
+        <div class="account-avaliacoes-list" id="contaAvaliacoesList">
+          <p class="account-empty">Você ainda não avaliou nenhum título.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="account-card account-danger">
+      <h2>Zona de risco</h2>
+      <p class="account-danger-desc">Apagar sua conta remove seu login permanentemente. Suas avaliações não são apagadas automaticamente.</p>
+      <button class="btn btn-secondary account-danger-btn" id="apagarContaBtn">Apagar minha conta</button>
+    </div>
   </section>
 
 </main>
@@ -127,23 +252,51 @@
 
 <!-- ===== MODAL DE DETALHES ===== -->
 <div class="modal-overlay" id="detailModal">
-  <div class="modal-box">
+  <div class="modal-box detail-box">
     <button class="modal-close" id="closeDetailModal">&times;</button>
-    <div class="modal-banner" id="modalBanner"></div>
+    <div class="modal-banner" id="modalBanner">
+      <div class="modal-banner-inner">
+        <p class="hero-tag" id="modalTag">DETALHES</p>
+        <h2 id="modalTitle"></h2>
+        <div class="hero-meta" id="modalMeta"></div>
+        <div class="rating-block" id="modalRatingBlock">
+          <div class="stars-display" id="modalStarsAvg"></div>
+          <span class="rating-count" id="modalRatingCount"></span>
+        </div>
+        <button class="btn btn-primary" id="modalPlayBtn">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+          Assistir agora
+        </button>
+      </div>
+    </div>
     <div class="modal-body">
-      <h2 id="modalTitle"></h2>
-      <div class="hero-meta" id="modalMeta"></div>
-      <p id="modalDesc"></p>
-      <div class="tags" id="modalTags"></div>
+      <div class="modal-body-grid">
+        <div class="modal-main-col">
+          <h3 class="modal-subhead">Sinopse</h3>
+          <p id="modalDesc"></p>
+          <div class="tags" id="modalTags"></div>
 
-      <button class="btn btn-primary" id="modalPlayBtn">
-        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
-        Assistir agora
-      </button>
+          <div id="seasonsWrap" class="seasons-wrap" style="display:none;">
+            <h3 class="modal-subhead">Episódios</h3>
+            <div class="season-selector" id="seasonSelector"></div>
+            <div class="episode-list" id="episodeList"></div>
+          </div>
+        </div>
+        <div class="modal-side-col">
+          <div class="rating-user-card">
+            <span>Sua avaliação</span>
+            <div class="stars-input" id="modalStarsInput"></div>
+          </div>
+          <div class="modal-info-card">
+            <h4>Informações</h4>
+            <dl class="modal-info-list" id="modalInfoList"></dl>
+          </div>
+        </div>
+      </div>
 
-      <div id="seasonsWrap" class="seasons-wrap" style="display:none;">
-        <div class="season-selector" id="seasonSelector"></div>
-        <div class="episode-list" id="episodeList"></div>
+      <div class="modal-similar" id="modalSimilarWrap" style="display:none;">
+        <h3 class="modal-subhead">Títulos semelhantes</h3>
+        <div class="row-track" id="modalSimilarTrack"></div>
       </div>
     </div>
   </div>
@@ -163,6 +316,7 @@
   </div>
   <div class="player-frame-wrap" id="playerFrameWrap">
     <div id="ytPlayer"></div>
+    <div class="player-tap-catcher" id="playerTapCatcher"></div>
     <div class="player-loading" id="playerLoading">
       <div class="player-spinner"></div>
       <span>Carregando...</span>
